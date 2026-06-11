@@ -10,22 +10,33 @@ export function AuthProvider({ children }) {
   const [token, setToken] = useState(localStorage.getItem('notes-token'))
   const [loading, setLoading] = useState(true)
 
-  // Verify token and get user on app load
   useEffect(() => {
     const verifyToken = async () => {
-      if (!token) {
+      const savedToken = localStorage.getItem('notes-token')
+      const savedUser = localStorage.getItem('notes-user')
+
+      if (!savedToken) {
         setLoading(false)
         return
       }
 
+      // If we have saved user data, use it immediately
+      if (savedUser) {
+        setUser(JSON.parse(savedUser))
+        setToken(savedToken)
+        setLoading(false)
+        return
+      }
+
+      // Otherwise verify with backend
       try {
         const response = await axios.get(`${API}/api/auth/me`, {
-          headers: { authorization: `Bearer ${token}` }
+          headers: { authorization: `Bearer ${savedToken}` }
         })
         setUser(response.data)
       } catch (error) {
-        // Token is invalid or expired
         localStorage.removeItem('notes-token')
+        localStorage.removeItem('notes-user')
         setToken(null)
         setUser(null)
       } finally {
@@ -38,12 +49,14 @@ export function AuthProvider({ children }) {
 
   const login = (userData, userToken) => {
     localStorage.setItem('notes-token', userToken)
+    localStorage.setItem('notes-user', JSON.stringify(userData))
     setToken(userToken)
     setUser(userData)
   }
 
   const logout = () => {
     localStorage.removeItem('notes-token')
+    localStorage.removeItem('notes-user')
     setToken(null)
     setUser(null)
   }
