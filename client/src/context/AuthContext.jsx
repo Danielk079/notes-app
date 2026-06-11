@@ -3,7 +3,7 @@ import axios from 'axios'
 
 const AuthContext = createContext()
 
-const API = 'http://localhost:5000'
+const API = 'https://notes-app-backend-s0qo.onrender.com'
 
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null)

@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import { useTheme } from '../context/ThemeContext'
 
-const API = 'http://localhost:5000'
+const API = 'https://notes-app-backend-s0qo.onrender.com'
 
 function Register() {
   const navigate = useNavigate()
