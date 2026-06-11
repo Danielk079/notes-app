@@ -47,8 +47,12 @@ function Login() {
       )
       navigate('/notes')
     } catch (err) {
-      setError(err.response?.data?.error || 'Something went wrong')
-    } finally {
+  setError(
+    err.response?.data?.error ||
+    err.message ||
+    'Something went wrong'
+  )
+}finally {
       setLoading(false)
     }
   }
